@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 import re
 import unittest
 
@@ -62,7 +63,7 @@ TEST_CASES = [
     ],
 
     # Case-sensitive paths.
-    
+
     [
         '/test',
         {
@@ -97,7 +98,7 @@ TEST_CASES = [
     ],
 
     # Strict mode.
-    
+
     [
         '/test',
         {
@@ -134,7 +135,7 @@ TEST_CASES = [
     ],
 
     # Non-ending mode.
-    
+
     [
         '/test',
         {
@@ -218,7 +219,7 @@ TEST_CASES = [
     ],
 
     # Combine modes.
-    
+
     [
         '/test',
         {
@@ -326,7 +327,7 @@ TEST_CASES = [
     ],
 
     # Arrays of simple paths.
-    
+
     [
         ['/one', '/two'],
         None,
@@ -340,7 +341,7 @@ TEST_CASES = [
     ],
 
     # Non-ending simple path.
-    
+
     [
         '/test',
         {
@@ -453,7 +454,7 @@ TEST_CASES = [
     ],
 
     # Optional named parameter.
-    
+
     [
         '/:test?',
         None,
@@ -608,7 +609,7 @@ TEST_CASES = [
     ],
 
     # Repeated zero or more times parameters.
-    
+
     [
         '/:test*',
         None,
@@ -664,7 +665,7 @@ TEST_CASES = [
     ],
 
     # Custom named parameters.
-    
+
     [
         '/:test(\\d+)',
         None,
@@ -783,7 +784,7 @@ TEST_CASES = [
     ],
 
     # Prefixed slashes could be omitted.
-    
+
     [
         'test',
         None,
@@ -899,7 +900,7 @@ TEST_CASES = [
     ],
 
     # Formats.
-    
+
     [
         '/test.json',
         None,
@@ -939,7 +940,7 @@ TEST_CASES = [
     ],
 
     # Format params.
-    
+
     [
         '/test.:format',
         None,
@@ -1069,7 +1070,7 @@ TEST_CASES = [
     ],
 
     # Format and path params.
-    
+
     [
         '/:test.:format',
         None,
@@ -1198,7 +1199,7 @@ TEST_CASES = [
     ],
 
     # Unnamed params.
-    
+
     [
         '/(\\d+)',
         None,
@@ -1758,7 +1759,7 @@ class CompileErrorTests(unittest.TestCase):
         with self.assertRaises(exception) as context:
             to_path(params)
 
-        self.assertEqual(context.exception.message, message)
+        self.assertEqual(context.exception.args[0], message)
 
     def test_should_raise_error_when_a_required_param_is_missing(self):
         self.check_to_path(
@@ -1784,3 +1785,6 @@ class CompileErrorTests(unittest.TestCase):
         self.check_to_path(
             '/:foo(\\d+)+', {'foo': [1, 2, 3, 'a']},
             ValueError, 'Expected all "foo" to match "\\d+"')
+
+if __name__ == '__main__':
+    unittest.main()

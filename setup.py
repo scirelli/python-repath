@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(
     name='repath',
-    version='0.1.0',
+    version='0.2.0',
     author='Nikolaos Coutsos',
     author_email='ncoutsos@gmail.com',
     description='Generate regular expressions form ExpressJS path patterns',
