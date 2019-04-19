@@ -1,5 +1,7 @@
 import re
 import urllib
+import urllib.parse
+
 
 REGEXP_TYPE = type(re.compile(''))
 PATH_REGEXP = re.compile('|'.join([
@@ -95,7 +97,7 @@ def tokens_to_function(tokens):
         obj = obj or {}
 
         for key in tokens:
-            if isinstance(key, basestring):
+            if isinstance(key, str):
                 path += key
                 continue
 
@@ -116,7 +118,7 @@ def tokens_to_function(tokens):
                         'Expected "{name}" to not repeat'.format(**key)
                     )
 
-                if len(value) == 0:
+                if not value:
                     if key['optional']:
                         continue
                     else:
@@ -125,24 +127,24 @@ def tokens_to_function(tokens):
                         )
 
                 for i, val in enumerate(value):
-                    val = unicode(val)
+                    val = str(val)
                     if not regexp.search(val):
                         raise ValueError(
                             'Expected all "{name}" to match "{pattern}"'.format(**key)
                         )
 
                     path += key['prefix'] if i == 0 else key['delimiter']
-                    path += urllib.quote(val, '')
+                    path += urllib.parse.quote(val, '')
 
                 continue
 
-            value = unicode(value)
+            value = str(value)
             if not regexp.search(value):
                 raise ValueError(
                     'Expected "{name}" to match "{pattern}"'.format(**key)
                 )
 
-            path += key['prefix'] + urllib.quote(value.encode('utf8'), '-_.!~*\'()')
+            path += key['prefix'] + urllib.parse.quote(value.encode('utf8'), '-_.!~*\'()')
 
         return path
 
@@ -184,10 +186,10 @@ def tokens_to_pattern(tokens, options=None):
     options = options or {}
 
     strict = options.get('strict')
-    end = options.get('end') != False
+    end = options.get('end') is not False
     route = ''
     lastToken = tokens[-1]
-    endsWithSlash = isinstance(lastToken, basestring) and lastToken.endswith('/')
+    endsWithSlash = isinstance(lastToken, str) and lastToken.endswith('/')
 
     PATTERNS = dict(
         REPEAT='(?:{prefix}{capture})*',
@@ -196,7 +198,7 @@ def tokens_to_pattern(tokens, options=None):
     )
 
     for token in tokens:
-        if isinstance(token, basestring):
+        if isinstance(token, str):
             route += escape_string(token)
             continue
 
@@ -250,7 +252,7 @@ def string_to_pattern(path, keys, options):
     tokens = parse(path)
     pattern = tokens_to_pattern(tokens, options)
 
-    tokens = filter(lambda t: not isinstance(t, basestring), tokens)
+    tokens = filter(lambda t: not isinstance(t, str), tokens)
     keys.extend(tokens)
 
     return pattern
